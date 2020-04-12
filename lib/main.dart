@@ -10,9 +10,11 @@ void main() {
   runApp(MyApp());
   /*fn defined in flutter package does all heavy lifiting of taking 
                       a widget and put it on screen by calling the build fn of widget*/
+
 }
 
 //void main() => runApp(MyApp()); alternative syntax but only used in 1 widget run
+
 
 class MyApp extends StatefulWidget {
   @override
