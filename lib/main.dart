@@ -1,83 +1,99 @@
-import 'package:flutter/material.dart'; //import handled by pubsoec.yml
+import 'package:flutter/material.dart';
 
-//import './question.dart'; //importing local library
-//import './answer.dart';
 import './quiz.dart';
 import './result.dart';
+// void main() {
+//   runApp(MyApp());
+// }
 
-//main function which is run first to kick of app code
-void main() {
-  runApp(MyApp());
-  /*fn defined in flutter package does all heavy lifiting of taking 
-                      a widget and put it on screen by calling the build fn of widget*/
-
-}
-
-//void main() => runApp(MyApp()); alternative syntax but only used in 1 widget run
-
+void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _MyAppState();
+  }
 }
 
 class _MyAppState extends State<MyApp> {
-  //State class can retain values as will not be rebuilt ad MyApp widget
-  var _questionIndex = 0; //_ in beg makes it private property
+  final _questions = const [
+    {
+      'questionText': 'What\'s your favorite color?',
+      'answers': [
+        {'text': 'Black', 'score': 10},
+        {'text': 'Red', 'score': 5},
+        {'text': 'Green', 'score': 3},
+        {'text': 'White', 'score': 1},
+      ],
+    },
+    {
+      'questionText': 'What\'s your favorite animal?',
+      'answers': [
+        {'text': 'Rabbit', 'score': 3},
+        {'text': 'Snake', 'score': 11},
+        {'text': 'Elephant', 'score': 5},
+        {'text': 'Lion', 'score': 9},
+      ],
+    },
+    {
+      'questionText': 'Who\'s your favorite Person?',
+      'answers': [
+        {'text': 'Rishi', 'score': 1},
+        {'text': 'Jonah', 'score': 1},
+        {'text': 'Tina', 'score': 1},
+        {'text': 'Vijay', 'score': 1},
+      ],
+    },
+  ];
+  var _questionIndex = 0;
+  var _totalScore = 0;
 
-  void _ansQuestion() {
+  void _resetQuiz() {
     setState(() {
-      //build is getting called when u set state
-      _questionIndex = _questionIndex + 1;
+      _questionIndex = 0;
+      _totalScore = 0;
     });
-    if (_questionIndex < 3) {
-      print("We have more questions");
-    } else {
-      print("Questionlist over");
-    }
-    print(_questionIndex);
   }
 
-  @override //good practice of specifying that u r overriding
-  Widget build(BuildContext ctx) {
-    //always responsible toreturn widget
+  void _answerQuestion(int score) {
+    // var aBool = true;
+    // aBool = false;
 
-    final _question = [
-      //can use final here as values will not change
-      {
-        "questionText": "whats your fav color?",
-        "answer": ["yellow", "blue", "orange"]
-      },
-      {
-        "questionText": "Whats your fav animal?",
-        "answer": ["dog", "cat", "bull","horse","lion"]
-      },
-      {
-        "questionText": "Whats your fav food?",
-        "answer": ["chicken", "fruits", "vegetables"]
-      },
-      {
-        "questionText": "Whats your fav sport",
-        "answer": ["cricket", "hockey", "football"]
-      },
-    ];
+    _totalScore += score;
+
+    setState(() {
+      _questionIndex = _questionIndex + 1;
+    });
+    print(_questionIndex);
+    if (_questionIndex < _questions.length) {
+      print('We have more questions!');
+    } else {
+      print('No more questions!');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // var dummy = const ['Hello'];
+    // dummy.add('Max');
+    // print(dummy);
+    // dummy = [];
+    // questions = []; // does not work if questions is a const
+
     return MaterialApp(
       home: Scaffold(
-        // give base page design widget
         appBar: AppBar(
-          title: Text(
-            'My first app',
-          ),
-          centerTitle: true,
+          title: Text('My First App'),
         ),
-        body: _questionIndex < _question.length
+        body: _questionIndex < _questions.length
             ? Quiz(
-                answerQuestion: _ansQuestion,
-                question: _question,
+                answerQuestion: _answerQuestion,
                 questionIndex: _questionIndex,
+                questions: _questions,
               )
-            : Result(),
+            : Result(_totalScore, _resetQuiz),
       ),
-    ); //scaffold is widget that gives basic structure for app
+    );
   }
 }
